@@ -78,7 +78,7 @@
 
     </style>
 </head>
-<body class="font-sans bg-gray-100 min-h-screen pt-20 flex flex-col antialiased">
+<body class="font-sans bg-gray-100 min-h-screen pt-0 flex flex-col antialiased">
 
   <!-- Your header code here -->
   <header class="fixed top-0 left-0 right-0 bg-ah-dark shadow-2xl z-50">
@@ -146,4 +146,72 @@
 </div>
 
     </header>
+      <!-- 6. JAVASCRIPT LOGIC (Required for Search Toggle and Active Links!) -->
+    <script type="module">
+        
+        const toggleSearchButton = document.getElementById('toggle-search-button');
+        const closeSearchButton = document.getElementById('close-search-button');
+        const searchContainer = document.getElementById('full-search-container');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mainHeaderRow = document.getElementById('main-header-row');
+        const searchInput = document.getElementById('search-input');
+
+        // Mobile menu elements
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+        // Mobile Menu Toggle Logic
+        function openMobileMenu() {
+            mobileNav.classList.remove('-translate-x-full');
+        }
+        function closeMobileMenuFunc() {
+            mobileNav.classList.add('-translate-x-full');
+        }
+        mobileMenuToggle.addEventListener('click', openMobileMenu);
+        closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        // Also close menu when a nav link is clicked (for better UX)
+        mobileNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenuFunc);
+        });
+
+        // Search Toggle Logic
+        function toggleSearch(show) {
+            if (show) {
+                searchContainer.classList.add('active');
+                // Hide main content when search is active
+                mainHeaderRow.classList.add('opacity-0');
+                mainHeaderRow.classList.add('pointer-events-none'); 
+                searchInput.focus();
+            } else {
+                searchContainer.classList.remove('active');
+                // Show main content when search is closed
+                mainHeaderRow.classList.remove('opacity-0');
+                mainHeaderRow.classList.remove('pointer-events-none');
+            }
+        }
+
+        toggleSearchButton.addEventListener('click', () => toggleSearch(true));
+        closeSearchButton.addEventListener('click', () => toggleSearch(false));
+
+        // Active Link Logic
+        function setActiveLink() {
+            const currentHash = window.location.hash || '#home';
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentHash) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        setActiveLink();
+        window.addEventListener('hashchange', setActiveLink);
+
+        // Render Icons
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
+        }
+    </script>
+    <!-- ===== AH-BROTHER FOOTER ===== -->
     <!-- END OF HEADER -->

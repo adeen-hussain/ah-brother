@@ -1,8 +1,120 @@
 <%- include('partials/header') %>
 
-<div class="p-8 text-center">
-  <h2 class="text-4xl font-bold mb-4">Welcome to AH-BROTHER</h2>
-  <p class="text-gray-600">Home page content here.</p>
-</div>
+<!-- ===== FULLSCREEN HERO CAROUSEL ===== -->
+<section id="hero-carousel" class="w-full h-[100vh] relative mt-0">
+  <div class="relative overflow-hidden h-full" id="carousel-root" aria-roledescription="carousel">
+    <!-- Track -->
+    <div id="carousel-track" class="flex transition-transform duration-700 ease-out h-full">
+      <!-- Slide 1 -->
+      <div class="w-full flex-shrink-0 h-full relative">
+        <img src="/slide.jpg" alt="Slide 1" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/30 flex flex-col justify-center items-center text-center text-white">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4">Welcome to AH-BROTHER</h1>
+          <p class="text-lg md:text-xl mb-6">Trendy Collections & Streetwear</p>
+          <a href="#" class="bg-ah-primary text-white px-6 py-3 rounded-full text-lg hover:bg-ah-primary/80 transition">Shop Now</a>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="w-full flex-shrink-0 h-full relative">
+        <img src="/slide.jpg" alt="Slide 2" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/30 flex flex-col justify-center items-center text-center text-white">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4">New Arrivals</h1>
+          <p class="text-lg md:text-xl mb-6">Explore our latest drops</p>
+          <a href="#" class="bg-ah-primary text-white px-6 py-3 rounded-full text-lg hover:bg-ah-primary/80 transition">Explore</a>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="w-full flex-shrink-0 h-full relative">
+        <img src="/slide.jpg" alt="Slide 3" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/30 flex flex-col justify-center items-center text-center text-white">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4">Limited Edition</h1>
+          <p class="text-lg md:text-xl mb-6">Don’t miss the latest exclusive styles</p>
+          <a href="#" class="bg-ah-primary text-white px-6 py-3 rounded-full text-lg hover:bg-ah-primary/80 transition">View Now</a>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="w-full flex-shrink-0 h-full relative">
+        <img src="/slide.jpg" alt="Slide 4" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/30 flex flex-col justify-center items-center text-center text-white">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4">Streetwear for All</h1>
+          <p class="text-lg md:text-xl mb-6">Style that speaks confidence</p>
+          <a href="#" class="bg-ah-primary text-white px-6 py-3 rounded-full text-lg hover:bg-ah-primary/80 transition">Discover</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Left / Right Controls -->
+    <button id="carousel-prev" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/40 hover:bg-ah-primary flex items-center justify-center text-white shadow-lg" aria-label="Previous slide">
+      <i data-lucide="chevron-left" class="w-6 h-6"></i>
+    </button>
+    <button id="carousel-next" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/40 hover:bg-ah-primary flex items-center justify-center text-white shadow-lg" aria-label="Next slide">
+      <i data-lucide="chevron-right" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Dots -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2"></div>
+  </div>
+</section>
+
+<!-- ===== CAROUSEL SCRIPT ===== -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const track = document.getElementById('carousel-track');
+  const root = document.getElementById('carousel-root');
+  const slides = Array.from(track.children);
+  const prevBtn = document.getElementById('carousel-prev');
+  const nextBtn = document.getElementById('carousel-next');
+  const dotsContainer = root.querySelector('.absolute.bottom-8');
+  const total = slides.length;
+  let index = 0;
+  let intervalId = null;
+  const AUTOPLAY_DELAY = 4000;
+
+  // Create dots
+  const dots = [];
+  for (let i = 0; i < total; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'w-3.5 h-3.5 rounded-full bg-gray-400 transition-all duration-200 border-0 focus:outline-none';
+    btn.dataset.index = i;
+    dotsContainer.appendChild(btn);
+    dots.push(btn);
+  }
+
+  function updateUI() {
+    track.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((d, i) => {
+      d.classList.toggle('bg-ah-primary', i === index);
+      d.classList.toggle('bg-gray-400', i !== index);
+    });
+  }
+
+  function goTo(i) { index = (i + total) % total; updateUI(); }
+  function next() { goTo(index + 1); }
+  function prev() { goTo(index - 1); }
+
+  function startAutoplay() {
+    stopAutoplay();
+    intervalId = setInterval(next, AUTOPLAY_DELAY);
+  }
+  function stopAutoplay() {
+    if (intervalId) clearInterval(intervalId);
+  }
+
+  nextBtn.addEventListener('click', () => { next(); startAutoplay(); });
+  prevBtn.addEventListener('click', () => { prev(); startAutoplay(); });
+  dots.forEach(d => d.addEventListener('click', e => { goTo(+e.target.dataset.index); startAutoplay(); }));
+  root.addEventListener('mouseenter', stopAutoplay);
+  root.addEventListener('mouseleave', startAutoplay);
+
+  updateUI();
+  startAutoplay();
+  if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+});
+</script>
+
+
 
 <%- include('partials/footer') %>
