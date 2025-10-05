@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standalone Header Component</title>
+    
+    <!-- Load Bebas Neue Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <!-- 1. Load Tailwind CSS from CDN (Required!) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. Load Lucide Icons (Required for the Search Icon, Menu, and Close Icons!) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // 3. Tailwind Configuration for Custom Colors (Required!)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        bebas: ['Bebas Neue', 'cursive'],
+                    },
+                    colors: {
+                        'ah-primary': '#DC2626', // Red
+                        'ah-dark': '#000000',  // Black
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* --- 4. Custom CSS for Animations and Active State (Required!) --- */
+        
+        /* Navigation Link Styling */
+        .nav-link {
+            transition: color 0.3s ease, transform 0.2s;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: white; 
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+        .nav-link:hover:after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* ACTIVE Link State: Red text and Red underline */
+        .nav-link.active {
+            color: #DC2626 !important;
+        }
+        .nav-link.active:after {
+            background-color: #DC2626;
+            width: 100%;
+            left: 0;
+        }
+        
+        /* Full-width Search Overlay Styling */
+/* --- Modern Search Overlay --- */
+#full-search-container.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#full-search-container.active #search-box {
+  transform: translateY(0);
+}
+
+
+    </style>
+</head>
+
+<!-- We add a top padding (pt-20) to the body so content doesn't get hidden by the fixed header -->
+<body class="font-sans bg-gray-100 min-h-screen pt-20 flex flex-col antialiased"> 
+
+    <!-- 5. THE HEADER HTML BLOCK -->
+    <header class="fixed top-0 left-0 right-0 bg-ah-dark shadow-2xl z-50">
+        <!-- Main Header Row - Visible on all screens -->
+        <div id="main-header-row" class="container mx-auto px-6 py-4 flex justify-between items-center transition-opacity duration-300">
+
+            <!-- Mobile Menu Toggle (Visible on small screens only) -->
+            <button id="mobile-menu-toggle" class="md:hidden text-white p-2">
+                <i data-lucide="menu" class="h-6 w-6"></i>
+            </button>
+
+            <!-- Mobile Navigation Menu (Hidden by default, visible when toggled) -->
+            <nav id="mobile-nav" class="fixed top-0 left-0 w-full h-full bg-ah-dark bg-opacity-95 flex flex-col items-center justify-center space-y-8 z-40 transform -translate-x-full transition-transform duration-300 md:hidden">
+                <button id="close-mobile-menu" class="absolute top-6 right-6 text-white p-2">
+                    <i data-lucide="x" class="h-7 w-7"></i>
+                </button>
+                <a href="#home" class="nav-link text-gray-400 text-2xl font-semibold hover:text-white">Home</a>
+                <a href="#shop" class="nav-link text-gray-400 text-2xl font-semibold hover:text-white">Shop</a>
+                <a href="#about" class="nav-link text-gray-400 text-2xl font-semibold hover:text-white">About Us</a>
+                <a href="#contact" class="nav-link text-gray-400 text-2xl font-semibold hover:text-white">Contact Us</a>
+            </nav>
+            </button>
+
+            <!-- Logo with Text -->
+            <a href="/" class="flex-shrink-0 flex items-center space-x-3 group">
+                <img src="logo.png" alt="AH Brother Logo" class="h-10 w-10 transform group-hover:scale-105 transition duration-300">
+                <h1 class="text-4xl font-bebas text-white tracking-wider transform group-hover:scale-105 transition duration-300">
+                    AH-BROTHER
+                </h1>
+            </a>
+
+            <!-- Navigation Links (Hidden on small screens, centered on large screens) -->
+            <nav class="hidden md:flex justify-center items-center space-x-4 sm:space-x-8" id="main-nav">
+                <a href="#home" class="nav-link text-gray-400 text-base font-medium hover:text-white">Home</a>
+                <a href="#shop" class="nav-link text-gray-400 text-base font-medium hover:text-white">Shop</a>
+                <a href="#about" class="nav-link text-gray-400 text-base font-medium hover:text-white">About Us</a>
+                <a href="#contact" class="nav-link text-gray-400 text-base font-medium hover:text-white">Contact Us</a>
+            </nav>
+
+            <!-- Search Toggle Button (Red with Icon) -->
+            <button id="toggle-search-button" class="bg-ah-primary text-white p-2 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-110 flex items-center justify-center shadow-lg">
+                <i data-lucide="search" class="h-6 w-6"></i>
+            </button>
+        </div>
+
+        <!-- Full-Width Search Overlay (Starts hidden above the header) -->
+        <!-- Modern Full-Width Search Overlay -->
+<div id="full-search-container" 
+     class="absolute inset-0 bg-ah-dark bg-opacity-95 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 ease-in-out">
+  
+  <div class="w-full max-w-2xl px-6 transform -translate-y-8 transition-transform duration-500 ease-in-out" id="search-box">
+    <div class="flex items-center bg-white rounded-full overflow-hidden shadow-2xl border-2 border-ah-primary focus-within:ring-2 focus-within:ring-ah-primary">
+      <i data-lucide="search" class="ml-4 text-ah-primary w-6 h-6"></i>
+      <input 
+        type="text" 
+        id="search-input"
+        placeholder="Search for products, categories, or brands..."
+        class="flex-grow px-4 py-3 text-gray-800 text-lg outline-none rounded-r-full"
+      >
+      <button id="close-search-button" class="p-3 pr-4 hover:text-ah-primary transition">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+    </header>
+    <!-- END OF HEADER -->
+
+    <!-- Placeholder Content and Targets to show functionality -->
+    <div class="p-8 text-center">
+        <h2 class="text-4xl font-bold mb-4">Header Demo</h2>
+        <p class="text-gray-600">The header is fixed at the top. Scroll down to see it stick.</p>
+        <p class="text-gray-600">Click the **Search Icon** (magnifying glass) to see the full-width search overlay!</p>
+        <p class="text-gray-600">Resize your browser to mobile width to see the **Menu Icon** appear.</p>
+    </div>
+    <div id="home" class="h-[100vh]">Scroll Target</div>
+    <div id="shop" class="h-[100vh]">Scroll Target</div>
+    <div id="about" class="h-[100vh]">Scroll Target</div>
+    <div id="contact" class="h-[100vh]">Scroll Target</div>
+    
+    <!-- 6. JAVASCRIPT LOGIC (Required for Search Toggle and Active Links!) -->
+    <script type="module">
+        
+        const toggleSearchButton = document.getElementById('toggle-search-button');
+        const closeSearchButton = document.getElementById('close-search-button');
+        const searchContainer = document.getElementById('full-search-container');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const mainHeaderRow = document.getElementById('main-header-row');
+        const searchInput = document.getElementById('search-input');
+
+        // Mobile menu elements
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+        // Mobile Menu Toggle Logic
+        function openMobileMenu() {
+            mobileNav.classList.remove('-translate-x-full');
+        }
+        function closeMobileMenuFunc() {
+            mobileNav.classList.add('-translate-x-full');
+        }
+        mobileMenuToggle.addEventListener('click', openMobileMenu);
+        closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
+        // Also close menu when a nav link is clicked (for better UX)
+        mobileNav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeMobileMenuFunc);
+        });
+
+        // Search Toggle Logic
+        function toggleSearch(show) {
+            if (show) {
+                searchContainer.classList.add('active');
+                // Hide main content when search is active
+                mainHeaderRow.classList.add('opacity-0');
+                mainHeaderRow.classList.add('pointer-events-none'); 
+                searchInput.focus();
+            } else {
+                searchContainer.classList.remove('active');
+                // Show main content when search is closed
+                mainHeaderRow.classList.remove('opacity-0');
+                mainHeaderRow.classList.remove('pointer-events-none');
+            }
+        }
+
+        toggleSearchButton.addEventListener('click', () => toggleSearch(true));
+        closeSearchButton.addEventListener('click', () => toggleSearch(false));
+
+        // Active Link Logic
+        function setActiveLink() {
+            const currentHash = window.location.hash || '#home';
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentHash) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        setActiveLink();
+        window.addEventListener('hashchange', setActiveLink);
+
+        // Render Icons
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
+        }
+    </script>
+    <!-- ===== AH-BROTHER FOOTER ===== -->
+<footer class="bg-ah-dark text-gray-300 py-10 mt-20">
+  <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+    
+    <!-- Logo and Description -->
+    <div>
+      <div class="flex items-center space-x-3 mb-4">
+        <img src="logo.png" alt="AH Brother Logo" class="h-10 w-10">
+        <h2 class="text-4xl font-bebas text-white tracking-wider transform group-hover:scale-105 transition duration-300">AH-BROTHER</h2>
+      </div>
+      <p class="text-sm text-gray-400 leading-relaxed">
+        AH-BROTHER brings you premium style and performance. 
+        We create apparel and products that inspire confidence and power.
+      </p>
+    </div>
+
+    <!-- Quick Links -->
+    <div>
+      <h3 class="text-white text-lg font-semibold mb-4">Quick Links</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#home" class="hover:text-ah-primary transition">Home</a></li>
+        <li><a href="#shop" class="hover:text-ah-primary transition">Shop</a></li>
+        <li><a href="#about" class="hover:text-ah-primary transition">About Us</a></li>
+        <li><a href="#contact" class="hover:text-ah-primary transition">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Support -->
+    <div>
+      <h3 class="text-white text-lg font-semibold mb-4">Support</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#" class="hover:text-ah-primary transition">FAQs</a></li>
+        <li><a href="#" class="hover:text-ah-primary transition">Shipping & Returns</a></li>
+        <li><a href="#" class="hover:text-ah-primary transition">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-ah-primary transition">Terms & Conditions</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact & Social -->
+    <div>
+      <h3 class="text-white text-lg font-semibold mb-4">Contact Us</h3>
+      <p class="text-sm text-gray-400 mb-3">📍 Karachi, Pakistan</p>
+      <p class="text-sm text-gray-400 mb-3">📞 +92 300 1234567</p>
+
+      <!-- Social Media Icons -->
+      <div class="flex space-x-4">
+        <a href="#" class="text-gray-400 hover:text-ah-primary transition">
+          <i data-lucide="facebook" class="w-5 h-5"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-ah-primary transition">
+          <i data-lucide="instagram" class="w-5 h-5"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-ah-primary transition">
+          <i data-lucide="twitter" class="w-5 h-5"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-ah-primary transition">
+          <i data-lucide="youtube" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 mt-10 pt-4 text-center text-sm text-gray-500">
+    © <span id="year"></span> AH-BROTHER. All rights reserved.
+  </div>
+</footer>
+
+<!-- Footer Script -->
+<script>
+  // Auto-update year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Re-render icons if Lucide is loaded
+  if (typeof lucide !== 'undefined' && lucide.createIcons) {
+    lucide.createIcons();
+  }
+</script>
+
+</body>
+</html>
+
+

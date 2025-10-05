@@ -1,0 +1,149 @@
+<!-- gegegegeggeg -->
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standalone Header Component</title>
+    
+    <!-- Load Bebas Neue Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <!-- 1. Load Tailwind CSS from CDN (Required!) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. Load Lucide Icons (Required for the Search Icon, Menu, and Close Icons!) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // 3. Tailwind Configuration for Custom Colors (Required!)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        bebas: ['Bebas Neue', 'cursive'],
+                    },
+                    colors: {
+                        'ah-primary': '#DC2626', // Red
+                        'ah-dark': '#000000',  // Black
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* --- 4. Custom CSS for Animations and Active State (Required!) --- */
+        
+        /* Navigation Link Styling */
+        .nav-link {
+            transition: color 0.3s ease, transform 0.2s;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: white; 
+            transition: width 0.3s ease-out, left 0.3s ease-out;
+        }
+        .nav-link:hover:after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* ACTIVE Link State: Red text and Red underline */
+        .nav-link.active {
+            color: #DC2626 !important;
+        }
+        .nav-link.active:after {
+            background-color: #DC2626;
+            width: 100%;
+            left: 0;
+        }
+        
+        /* Full-width Search Overlay Styling */
+/* --- Modern Search Overlay --- */
+#full-search-container.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#full-search-container.active #search-box {
+  transform: translateY(0);
+}
+
+
+    </style>
+</head>
+<body class="font-sans bg-gray-100 min-h-screen pt-20 flex flex-col antialiased">
+
+  <!-- Your header code here -->
+  <header class="fixed top-0 left-0 right-0 bg-ah-dark shadow-2xl z-50">
+        <!-- Main Header Row - Visible on all screens -->
+        <div id="main-header-row" class="container mx-auto px-6 py-4 flex justify-between items-center transition-opacity duration-300">
+
+            <!-- Mobile Menu Toggle (Visible on small screens only) -->
+            <button id="mobile-menu-toggle" class="md:hidden text-white p-2">
+                <i data-lucide="menu" class="h-6 w-6"></i>
+            </button>
+
+            <!-- Mobile Navigation Menu (Hidden by default, visible when toggled) -->
+            <nav id="mobile-nav" class="fixed top-0 left-0 w-full h-full bg-ah-dark bg-opacity-95 flex flex-col items-center justify-center space-y-8 z-40 transform -translate-x-full transition-transform duration-300 md:hidden">
+                <button id="close-mobile-menu" class="absolute top-6 right-6 text-white p-2">
+                    <i data-lucide="x" class="h-7 w-7"></i>
+                </button>
+                <a href="#home" class="nav-link text-gray-400 text-2xl font-semibold hover:text-white">Home</a>
+                <a href="#shop" class="nav-link text-gray-400 text-2xl font-semibold hover:text-white">Shop</a>
+                <a href="#about" class="nav-link text-gray-400 text-2xl font-semibold hover:text-white">About Us</a>
+                <a href="#contact" class="nav-link text-gray-400 text-2xl font-semibold hover:text-white">Contact Us</a>
+            </nav>
+            </button>
+
+            <!-- Logo with Text -->
+            <a href="/" class="flex-shrink-0 flex items-center space-x-3 group">
+                <img src="/logo.png" alt="AH Brother Logo" class="h-10 w-10 transform group-hover:scale-105 transition duration-300">
+                <h1 class="text-4xl font-bebas text-white tracking-wider transform group-hover:scale-105 transition duration-300">
+                    AH-BROTHER
+                </h1>
+            </a>
+
+            <!-- Navigation Links (Hidden on small screens, centered on large screens) -->
+            <nav class="hidden md:flex justify-center items-center space-x-4 sm:space-x-8" id="main-nav">
+                <a href="#home" class="nav-link text-gray-400 text-base font-medium hover:text-white">Home</a>
+                <a href="#shop" class="nav-link text-gray-400 text-base font-medium hover:text-white">Shop</a>
+                <a href="#about" class="nav-link text-gray-400 text-base font-medium hover:text-white">About Us</a>
+                <a href="#contact" class="nav-link text-gray-400 text-base font-medium hover:text-white">Contact Us</a>
+            </nav>
+
+            <!-- Search Toggle Button (Red with Icon) -->
+            <button id="toggle-search-button" class="bg-ah-primary text-white p-2 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-110 flex items-center justify-center shadow-lg">
+                <i data-lucide="search" class="h-6 w-6"></i>
+            </button>
+        </div>
+
+        <!-- Full-Width Search Overlay (Starts hidden above the header) -->
+        <!-- Modern Full-Width Search Overlay -->
+<div id="full-search-container" 
+     class="absolute inset-0 bg-ah-dark bg-opacity-95 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 ease-in-out">
+  
+  <div class="w-full max-w-2xl px-6 transform -translate-y-8 transition-transform duration-500 ease-in-out" id="search-box">
+    <div class="flex items-center bg-white rounded-full overflow-hidden shadow-2xl border-2 border-ah-primary focus-within:ring-2 focus-within:ring-ah-primary">
+      <i data-lucide="search" class="ml-4 text-ah-primary w-6 h-6"></i>
+      <input 
+        type="text" 
+        id="search-input"
+        placeholder="Search for products, categories, or brands..."
+        class="flex-grow px-4 py-3 text-gray-800 text-lg outline-none rounded-r-full"
+      >
+      <button id="close-search-button" class="p-3 pr-4 hover:text-ah-primary transition">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+    </header>
+    <!-- END OF HEADER -->
